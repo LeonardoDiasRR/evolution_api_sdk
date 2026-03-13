@@ -35,10 +35,7 @@ Para enviar uma mensagem de texto via WhatsApp:
 **Comando Linux:**
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --text="Olá! Esta é uma mensagem de texto."
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --text="Olá! Esta é uma mensagem de texto."
 ```
 
 **Parâmetros:**
@@ -68,10 +65,7 @@ Para enviar um arquivo de áudio via WhatsApp:
 **Comando Linux:**
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --file="/caminho/para/audio.mp3"
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --file="/caminho/para/audio.mp3"
 ```
 
 **Importante:** Cada arquivo enviado gera uma mensagem separada no WhatsApp.
@@ -113,12 +107,7 @@ O módulo suporta o envio de múltiplos arquivos em uma única execução.
 **Comando Linux:**
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --file="/caminho/audio1.mp3" \
-  --file="/caminho/documento.pdf" \
-  --file="/caminho/imagem.jpg"
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --file="/caminho/audio1.mp3" --file="/caminho/documento.pdf" --file="/caminho/imagem.jpg"
 ```
 
 **Behavior:**
@@ -195,30 +184,19 @@ Usuário pediu envio de mensagem WhatsApp?
 ### Enviar saudação
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --text="Olá! Sua solicitação foi recebida."
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --text="Olá! Sua solicitação foi recebida."
 ```
 
 ### Enviar nota de voz
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --file="/arquivos/nota_voz.mp3"
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --file="/arquivos/nota_voz.mp3"
 ```
 
 ### Enviar múltiplos documentos
 
 ``` bash
-/opt/projetos/evolution_api_sdk/venv/bin/python \
-  /opt/projetos/evolution_api_sdk/whatsapp_send_message.py \
-  --telefone_destino=5595981021111 \
-  --file="/documentos/contrato.pdf" \
-  --file="/documentos/termo.docx" \
-  --file="/imagens/assinatura.jpg"
+/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino=5595981021111 --file="/documentos/contrato.pdf" --file="/documentos/termo.docx" --file="/imagens/assinatura.jpg"
 ```
 
 **Resultado:** O receptor receberá 3 mensagens separadas:
@@ -269,14 +247,9 @@ de sistema (subprocess/shell):
 import subprocess
 
 def enviar_whatsapp_texto(telefone, mensagem):
-    cmd = [
-        "/opt/projetos/evolution_api_sdk/venv/bin/python",
-        "/opt/projetos/evolution_api_sdk/whatsapp_send_message.py",
-        f"--telefone_destino={telefone}",
-        f"--text={mensagem}"
-    ]
+    cmd = "/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino={} --text='{}'".format(telefone, mensagem)
     
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     
     if result.returncode == 0:
         return {"success": True, "output": result.stdout}
@@ -300,17 +273,10 @@ def enviar_whatsapp_arquivos(telefone, arquivos):
     Returns:
         Resultado da execução
     """
-    cmd = [
-        "/opt/projetos/evolution_api_sdk/venv/bin/python",
-        "/opt/projetos/evolution_api_sdk/whatsapp_send_message.py",
-        f"--telefone_destino={telefone}"
-    ]
+    arquivos_args = " ".join([f"--file=\"{arquivo}\"" for arquivo in arquivos])
+    cmd = f"/opt/projetos/evolution_api_sdk/venv/bin/python /opt/projetos/evolution_api_sdk/whatsapp_send_message.py --telefone_destino={telefone} {arquivos_args}"
     
-    # Adicionar cada arquivo como argumento separado
-    for arquivo in arquivos:
-        cmd.extend(["--file", arquivo])
-    
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     
     if result.returncode == 0:
         return {"success": True, "output": result.stdout}
